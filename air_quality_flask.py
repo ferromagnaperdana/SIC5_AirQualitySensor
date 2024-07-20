@@ -11,6 +11,7 @@ uri = f"mongodb+srv://ferromagnaperdana:cobacobaberhadiah510@gettingstartedsic5.
 client = pymongo.MongoClient(uri)
 db = client['air_quality_v1'] # ganti sesuai dengan nama database kalian
 my_collections = db['device_1'] # ganti sesuai dengan nama collections kalian
+get_data = False # Parameter untuk melakukan perintah ambil data
 
 # Send a ping to confirm a successful connection
 try:
@@ -43,9 +44,10 @@ def receive_data():
         'pm25': pm25,
         'timestamp': datetime.datetime.utcnow()
         }
-
+        
         # Push data to MongoDB
         result = my_collections.insert_one(document)
+        get_data = True
 
     return jsonify(response), 200
 
@@ -53,6 +55,10 @@ def receive_data():
 # Get data from MongoDB
 #for x in my_collections.find():
 #    print(x)
+
+if get_data == True:
+    data = list(my_collections.find())
+    get_data == False
 
 
 if __name__ == '__main__':
